@@ -2,9 +2,13 @@ Vagrant.configure("2") do |config|
 
     config.vm.box = "ubuntu/xenial64"
 
-    # config.vm.network "private_network", ip: "192.168.34.10"
+    config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+    config.vm.network "forwarded_port", guest: 443, host: 8443, host_ip: "127.0.0.1"
 
-    config.vm.synced_folder "../www", "/var/www"
+    config.vm.synced_folder "../www", "/var/www",
+        owner: "www-data",
+        group: "www-data",
+        mount_options: ['dmode=775', 'fmode=664']
 
     config.vm.hostname = "ServerAlpha"
 
@@ -15,6 +19,6 @@ Vagrant.configure("2") do |config|
 
     config.ssh.insert_key = true
 
-    # config.vm.provision :shell, :path => "provision.sh"
+    config.vm.provision :shell, :path => "provision.sh"
 
 end
